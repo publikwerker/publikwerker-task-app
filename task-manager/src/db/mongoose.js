@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
   useNewUrlParser: true,
@@ -6,19 +7,64 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
 })
 
 const User = mongoose.model('User', {
-  name:{
-    type: String
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+    validate(value) {
+      if ( value.length <= 6 ) {
+        throw new Error('Password must be greater than six characters long.')
+      }
+      if (value.includes('password')) {
+        throw new Error(`Password may not contain the word 'password'`);
+      }
+    }
+  },
+  email: {
+    type: String,
+    trim: true,
+    lowercase: true,
+    required: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error('Email is invalid')
+      }
+    }
   },
   age: {
-    type: Number
+    type: Number,
+    default: 0,
+    validate(value) {
+      if (value < 0) {
+        throw new Error('Age must be a positive number');
+      }
+    }
   }
 })
 
-// 
+const user = new User({
+  name: 'Billy',
+  email: 'Billy@TheBilly.club',
+  password: 'Green21',
+  age: 55
+});
+
+user.save().then(()=>{
+  console.log(`The user is ${user}`);
+}).catch((error)=> {
+  console.log(`The ERROR is ${error}`);
+})
+ 
 
 const Task = mongoose.model('Task', {
   description: {
-    type: String
+    type: String,
+    required: true
   },
   completed: {
     type: Boolean
@@ -26,7 +72,7 @@ const Task = mongoose.model('Task', {
 })
 
 const newTask = new Task({
-  description: 'Buy some land',
+  description: 'Daily fu',
   completed: false
 })
 
