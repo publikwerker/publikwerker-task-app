@@ -8,26 +8,17 @@ MongoClient.connect(connectionURL, {useNewUrlParser:true}, (error, client)=>{
     return console.log(`${error}: An error occured`);
   }
   const db = client.db(databaseName);
-  // db.collection('users').updateOne({
-  //   _id: new ObjectID('5d262ed140a0a5836aaaeea9')
-  // }, {
-  //   $inc: {
-  //     age: 1
-  //   }
+  // db.collection('users').deleteMany({
+  //   age: 50
   // }).then((result)=>{
-  //   console.log(`${result} is the result`);
+  //   console.log(`The Result: ${result}`);
   // }).catch((error)=>{
-  //   console.log(`${error} is the error`);
+  //   console.log(`The ERROR is ${error}`);
   // });
-  db.collection('tasks').updateMany({
-    completed: false
-  },{
-    $set: {
-      completed: true
-    }
+
+  db.collection('tasks').deleteOne({
+    description: 'Find a house'
   }).then((result)=>{
-    console.log(`The Result is ${result}`);
-  }).catch((error)=>{
-    console.log(`There is an error, ${error}`);
-  })
+    console.log(`The Result: ${result}`);
+  }).catch((error)=>{`There was an ERROR: ${error}`});
 });
