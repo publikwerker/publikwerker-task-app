@@ -37,14 +37,14 @@ app.get('/users/:id', (req, res) => {
   User.findById(id)
   .then((user)=>{
     if (!user){
-      res.status(404).send()
+      res.status(404).send('User ID not found.')
     }
     res.send(user);
   })
   .catch((err) => {
     res.status(500).send(err);
-  })
-})
+  });
+});
 
 app.post('/tasks', (req, res) => {
   const task = new Task(req.body);
@@ -54,6 +54,30 @@ app.post('/tasks', (req, res) => {
   })
   .catch((err)=>{
     res.status(400).send(err);
+  });
+});
+
+app.get('/tasks', (req, res) => {
+  Task.find({})
+  .then((tasks)=>{
+    res.status(200).send(tasks);
+  })
+  .catch((err) => {
+    res.status(500).send(err);
+  });
+});
+
+app.get('/tasks/:id', (req, res) => {
+  const { id } = req.params;
+  Task.findById(id)
+  .then((task) => {
+    if (!task) {
+      res.status(404).send('Task ID not found.');
+    }
+    res.status(200).send(task);
+  })
+  .catch((err) => {
+    res.status(500).send(err);
   });
 });
 
