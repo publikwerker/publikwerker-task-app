@@ -18,30 +18,15 @@ app.post('/users', async (req, res) => {
   } catch (e) {
     res.status(500).send(e.message);
   };
-
-  // user.save()
-  // .then(() => {
-  //   res.status(201).send(user);
-  // })
-  // .catch((err)=>{
-  //   res.status(400).send(err);
-  // });
 });
 
 app.get('/users', async (req, res) => {
   try {
-    const users = await User.find({})
-    res.status(200).send(users)
+    const users = await User.find({});
+    res.status(200).send(users);
   } catch (e) {
-    res.status(500).send(e)
-} 
-  // User.find({})
-  // .then((users) => {
-  //   res.status(200).send(users);
-  // })
-  // .catch((err) => {
-  //   res.status(500).send(err);
-  // });
+    res.status(500).send(e);
+  }; 
 });
 
 app.get('/users/:id', async (req, res) => {
@@ -50,7 +35,7 @@ app.get('/users/:id', async (req, res) => {
     console.log(id);
     const user = await User.findById(id);
     if (!user){
-      return res.status(404).send('User ID not found.')
+      return res.status(404).send('User ID not found.');
     }
     res.send(user);
   } catch (err) {
@@ -63,17 +48,8 @@ app.post('/tasks', async (req, res) => {
     const task = await new Task(req.body).save();
     res.status(201).send(task);
   } catch (err) {
-    res.status(400).send(err)
+    res.status(400).send(err);
   };
-
-  // const task = new Task(req.body);
-  // task.save()
-  // .then(()=>{
-  //   res.status(201).send(task);
-  // })
-  // .catch((err)=>{
-  //   res.status(400).send(err);
-  // });
 });
 
 app.get('/tasks', async (req, res) => {
