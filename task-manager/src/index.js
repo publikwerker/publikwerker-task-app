@@ -34,6 +34,7 @@ app.get('/users', (req, res) => {
 app.get('/users/:id', (req, res) => {
   const { id } = req.params;
   console.log(id);
+  
   User.findById(id)
   .then((user)=>{
     if (!user){
