@@ -37,6 +37,19 @@ router.post('/users/logout', auth, async (req, res) => {
   };
 });
 
+router.post('/users/logoutAll', auth, async (req, res) => {
+  try {
+    // clear out tokens from user object tokens array
+    req.user.tokens = [];
+    // remove current token from token property of user object
+    req.token = '';
+    await req.user.save();
+    res.send();
+  } catch (e) {
+    res.status(500).send(e);
+  };
+});
+
 router.get('/users/me', auth, async (req, res) => {
  res.send(req.user); 
 });
