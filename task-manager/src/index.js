@@ -16,15 +16,14 @@ app.listen(port, ()=> {
   console.log(chalk.green.inverse(`Server is running on port ${port}`));
 })
 
-const bcrypt = require('bcryptjs');
-const myFunction = async () => {
-  const password = 'Pa55word';
-  const hashedPassword = await bcrypt.hash(password, 8);
-  console.log(password);
-  console.log(hashedPassword);
+const jwt = require('jsonwebtoken');
 
-  const isMatch = await bcrypt.compare('Pa55word', hashedPassword);
-  console.log(isMatch);
+const myFunction = async () => {
+  const token = jwt.sign({ _id: 'abc123' },'anythingworks', { expiresIn: '7 days' });
+  console.log(token);
+
+  const data = jwt.verify(token, 'anythingworks')
+  console.log(data);
 };
 
 myFunction()

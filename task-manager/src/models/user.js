@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -36,9 +37,28 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     min: 0
-  }
+  },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 });
 
+// methods are accessible on the Instance
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign({ _id: user._id.toString() }, 'anythingworks', { expiresIn: '1 day'});
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+  
+  return token;
+};
+
+// statics are accessible on the Models
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({email});
   if (!user) {
@@ -49,7 +69,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     throw new Error('Unable to login');
   }
   return user;
-}
+};
 
 // Hash the plain text password before saving
 userSchema.pre('save', async function (next) {
