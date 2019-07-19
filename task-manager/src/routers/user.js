@@ -9,7 +9,7 @@ router.post('/users', async (req, res) => {
   try {
     await user.save();
     const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
+    res.status(201).send({ user: user.getPublicProfile, token });
   } catch (e) {
     res.status(500).send(e.message);
   };
@@ -41,8 +41,6 @@ router.post('/users/logoutAll', auth, async (req, res) => {
   try {
     // clear out tokens from user object tokens array
     req.user.tokens = [];
-    // remove current token from token property of user object
-    req.token = '';
     await req.user.save();
     res.send();
   } catch (e) {
