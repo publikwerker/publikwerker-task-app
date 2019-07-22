@@ -1,5 +1,6 @@
 const express = require('express');
 const Task  = require('../models/task');
+const User = require('../models/user');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
@@ -16,9 +17,11 @@ router.post('/tasks', auth, async (req, res) => {
   };
 });
 
-router.get('/tasks', async (req, res) => {
+router.get('/tasks', auth, async (req, res) => {
+  const _id = req.user._id
   try {
-    const tasks = await Task.find({});
+    const tasks = await User.findById({_id});
+    await tasks.populate('tasks').execPopulate();
     res.status(200).send(tasks);
   } catch (err) {
     res.status(500).send(err);
@@ -48,7 +51,6 @@ router.patch('/tasks/:id', async (req, res) => {
   }
   try {
     const task = await Task.findById(req.params.id);
-    //const task = await Task.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true});
     if (!task) {
       return res.status(404).send('Cannot find task');
     }
