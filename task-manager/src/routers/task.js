@@ -1,10 +1,14 @@
 const express = require('express');
 const Task  = require('../models/task');
+const auth = require('../middleware/auth');
 const router = new express.Router();
 
-router.post('/tasks', async (req, res) => {
+router.post('/tasks', auth, async (req, res) => {
+  const task = new Task({
+    ...req.body,
+    createdBy: req.user._id
+  })
   try {
-    const task = await new Task(req.body).save();
     res.status(201).send(task);
   } catch (err) {
     res.status(400).send(err);
@@ -30,18 +34,6 @@ router.get('/tasks/:id', async (req, res) => {
   } catch (err) {
     res.status(500).send(err);
   };
-
-  // const { id } = req.params;
-  // Task.findById(id)
-  // .then((task) => {
-  //   if (!task) {
-  //     res.status(404).send('Task ID not found.');
-  //   }
-  //   res.status(200).send(task);
-  // })
-  // .catch((err) => {
-  //   res.status(500).send(err);
-  // });
 });
 
 router.patch('/tasks/:id', async (req, res) => {

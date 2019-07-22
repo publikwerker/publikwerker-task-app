@@ -48,6 +48,12 @@ const userSchema = new mongoose.Schema({
   ]
 });
 
+userSchema.virtual('tasks', {
+  ref: 'Task',
+  localField: '_id',
+  foreignField: 'createdBy'
+})
+
 // methods are accessible on the Instance
 userSchema.methods.toJSON = function () {
   const user = this;
