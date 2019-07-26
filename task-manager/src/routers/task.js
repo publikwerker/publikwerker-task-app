@@ -40,7 +40,7 @@ router.get('/tasks/:id', auth, async (req, res) => {
   };
 });
 
-router.patch('/tasks/:id', async (req, res) => {
+router.patch('/tasks/:id', auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['completed', 'description'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
@@ -48,7 +48,7 @@ router.patch('/tasks/:id', async (req, res) => {
     return res.status(400).send('Error: non-updatable field')
   }
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await Task.findOne({_id: req.params.id, createdBy: req.user._id});
     if (!task) {
       return res.status(404).send('Cannot find task');
     }
@@ -60,13 +60,13 @@ router.patch('/tasks/:id', async (req, res) => {
   };
 });
 
-router.delete('/tasks/:id', async (req, res) => {
+router.delete('/tasks/:id', auth, async (req, res) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    const task = await Task.findOneAndDelete({_id: req.params.id, createdBy: req.user._id});
     if (!task) {
       return res.status(404).send(`Error: Unable to find taskId ${req.params.id}.`);
     }
-    res.send(task);
+    res.send();
   } catch (err) {
     res.status(500).send(err);
   };
