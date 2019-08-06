@@ -32,19 +32,33 @@ test('Should sign up a new user', async () => {
       email: 'hello@publikwerker.com',
       password: 'Pa55word'
     }).expect(201)
-console.log(response.body)
-    // Assert that the database was changed correctly
-    const user = await User.findById(response.body.user._id)
-    expect(user).not.toBeNull()
+    
+  // Assert that the database was changed correctly
+  const user = await User.findById(response.body.user._id)
+  expect(user).not.toBeNull()
+
+  // Assertions about the response
+  expect(response.body).toMatchObject({
+    user: {
+      name: 'jason',
+      email: 'hello@publikwerker.com',
+    },
+    token: user.tokens[0].token
+  });
+
+  expect(user.password).not.toBe('Pa55word'); 
 })
 
 test('Should login existing user', async () => {
-  await request(app)
+  const response = await request(app)
     .post('/users/login')
     .send({
       email: userOne.email,
       password: userOne.password
     }).expect(200)
+
+  const user = await User.findById(userOneId)
+  expect(user.tokens[1].token).toBe(response.body.token)
 })
 
 test('Should not login nonexistent user', async () => {
