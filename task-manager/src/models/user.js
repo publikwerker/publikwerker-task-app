@@ -82,6 +82,18 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
+userSchema.methods.getPublicProfile = async function () {
+  console.log(`this is ${this}`)
+  const { _id,age,name,email,avatar} = this;
+  return {
+    _id,
+    age,
+    name,
+    email,
+    avatar
+  }
+}
+
 // statics are accessible on the Models
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({email});
