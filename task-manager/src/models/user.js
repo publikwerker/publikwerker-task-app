@@ -83,7 +83,6 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 userSchema.methods.getPublicProfile = async function () {
-  console.log(`this is ${this}`)
   const { _id,age,name,email,avatar} = this;
   return {
     _id,
