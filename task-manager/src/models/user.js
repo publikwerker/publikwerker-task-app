@@ -94,7 +94,7 @@ userSchema.methods.getPublicProfile = async function () {
   }
 }
 
-// statics are accessible on the Models
+// statics are accessible on the Model
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({email});
   if (!user) {
