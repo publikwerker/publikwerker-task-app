@@ -3,18 +3,20 @@
  */
 
 const request = require('supertest');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const app = require('../src/app');
 const User = require('../src/models/user');
 const { userOne, userOneId, setUpDatabase } = require('./fixtures/db.js');
 
-beforeEach(setUpDatabase);
+beforeEach(setUpDatabase)
 
 test('Should sign up a new user', async () => {
   const response = await request(app)
     .post('/users')
     .send({
       name: 'jason',
-      email: 'hello@publikwerker.com',
+      email: 'jason@publikwerks.com',
       password: 'Pa55word'
     }).expect(201)
     
@@ -26,7 +28,7 @@ test('Should sign up a new user', async () => {
   expect(response.body).toMatchObject({
     user: {
       name: 'jason',
-      email: 'hello@publikwerker.com',
+      email: 'jason@publikwerks.com',
     },
     token: user.tokens[0].token
   });
