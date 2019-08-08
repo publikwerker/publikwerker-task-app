@@ -1,7 +1,12 @@
 const request = require('supertest');
 const app = require('../src/app');
 const Task = require('../src/models/task');
-const { userOne, userOneId, setUpDatabase } = require('./fixtures/db.js');
+const { userOne,
+  userOneId,
+  userTwoId,
+  setUpDatabase,
+  taskThreeId,
+  taskThree } = require('./fixtures/db.js');
 
 beforeEach(setUpDatabase);
 
@@ -25,4 +30,19 @@ test('Should return tasks for user', async () => {
     .send()
     .expect(200)
   expect(response.body).toHaveLength(2)
+})
+
+test('Should only delete tasks belonging to user', async () => {
+  await request(app)
+    .delete(`/tasks/${taskThreeId}`)
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send()
+    .expect(404)
+
+  const task = await Task.findById(taskThreeId)
+  expect(task).toMatchObject({
+    _id: taskThreeId,
+    completed: false,
+    createdBy: userTwoId
+  });
 })

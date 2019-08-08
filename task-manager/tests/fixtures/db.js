@@ -29,21 +29,22 @@ const userTwo = {
 const taskOne = {
   _id: new mongoose.Types.ObjectId(),
   description: 'description for task one',
-  completee: false,
+  completed: false,
   createdBy: userOne._id
 }
 
 const taskTwo = {
   _id: new mongoose.Types.ObjectId(),
   description: 'description for task two',
-  completee: true,
+  completed: true,
   createdBy: userOne._id
 }
 
+const taskThreeId = new mongoose.Types.ObjectId();
 const taskThree = {
-  _id: new mongoose.Types.ObjectId(),
+  _id: taskThreeId,
   description: 'description for task three',
-  completee: false,
+  completed: false,
   createdBy: userTwo._id
 }
 
@@ -60,5 +61,8 @@ const setUpDatabase = async () => {
 module.exports = {
   userOne,
   userOneId,
-  setUpDatabase
+  userTwoId,
+  setUpDatabase,
+  taskThree,
+  taskThreeId
 }
