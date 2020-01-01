@@ -125,3 +125,11 @@ test('Should reject invalid field', async () => {
       location: 'my private idaho'
     }).expect(400)
 })
+
+//
+// User Test Ideas
+//
+// Should not signup user with invalid name/email/password
+// Should not update user if unauthenticated
+// Should not update user with invalid name/email/password
+// Should not delete user if unauthenticated
