@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 const validator = require('validator');
 const chalk = require('chalk');
-const getNotes = require('./notes');
+const notes = require('./notes');
 const error = chalk.bold.bgRed;
 
 // Customize yargs version
@@ -24,7 +24,7 @@ yargs.command({
     }
   },
   handler: function(argv) {
-    console.log(`Title: ${argv.title}.\nBody: ${argv.body}.`);
+    notes.addNote(argv.title, argv.body);
   }
 });
 
