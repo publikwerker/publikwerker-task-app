@@ -2,41 +2,47 @@ const fs = require('fs');
 console.log('notes.js');
 const chalk = require('chalk');
 const error = chalk.bold.bgRed;
+const success = chalk.bold.bgGreen;
 
-const getNote = function(){
+const getNote = () => {
   return 'Your notes...';
 }
 
-const addNote = function(title, body){
+const addNote = (title, body) => {
   const notes = loadNotes();
   let titles = [];
   notes.forEach(note => {
     titles.push(note.title);
   });
-  console.log(titles);
   if (titles.includes(title)){
-    console.log(error('note already exists'));
+    console.log(error('Note already exists'));
   } else { 
     notes.push({
       title: title,
       body: body
     });
     saveNotes(notes);
+    console.log(success(`Note ${title} saved!`));
   };
 };
 
-const saveNotes = function(notes) {
+const saveNotes = (notes) => {
   const dataJSON = JSON.stringify(notes);
   fs.writeFileSync('notes.json', dataJSON);
 };
 
-const removeNote = function(title) {
+const removeNote = (title) => {
   let notes = loadNotes();
-  notes = notes.filter(note => note.title !== title);
-  saveNotes(notes);
+  let newNotes = notes.filter(note => note.title !== title);
+  if (newNotes.length === notes.length) {
+    console.log(error('No note found!'));
+  } else {
+    console.log(success(`Note ${title} removed!`));
+  }
+  saveNotes(newNotes);
 }
 
-const loadNotes = function () {
+const loadNotes = () => {
   try {
     const dataBuffer = fs.readFileSync('notes.json');
     const dataJSON = dataBuffer.toString();
